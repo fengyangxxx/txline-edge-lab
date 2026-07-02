@@ -18,6 +18,14 @@ final bounty QA.
 - TxLINE data is primary input path.
 - Replay mode is deterministic and documented.
 - Live adapter exists for `/api/odds/stream` and `/api/scores/stream`.
+- Evidence packet includes `/api/odds/validation` and
+  `/api/scores/stat-validation` readiness.
+- Latest signal includes canonical proof digest and clearly labels replay mode
+  as deterministic replay, not live chain attestation.
+- Replay benchmark includes qualified signals, proof trace count, paper PnL, and
+  CLV proxy.
+- Paper execution gate is stricter than signal generation and documents
+  anti-chase rules.
 - Demo video under five minutes.
 - Repo public and includes source code.
 - Documentation explains core idea, highlights, and endpoints used.
@@ -40,5 +48,6 @@ final bounty QA.
 npm install
 npm run smoke
 npm run packet
+npm run verify
 npm run build
 ```

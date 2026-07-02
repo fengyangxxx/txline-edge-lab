@@ -1,24 +1,83 @@
 {
   "product": "TxLINE Edge Lab",
   "track": "Trading Tools and Agents",
-  "generated_at": "2026-07-02T13:24:12.864Z",
+  "generated_at": "2026-07-02T14:34:54.947Z",
   "demo_mode": "deterministic replay with live-ready TxLINE SSE adapter",
   "txline_endpoints": [
     "/api/fixtures/snapshot",
     "/api/odds/stream",
-    "/api/scores/stream"
+    "/api/scores/stream",
+    "/api/odds/validation",
+    "/api/scores/stat-validation"
   ],
   "replay": {
     "fixtures": 3,
-    "updates": 24
+    "updates": 24,
+    "trace_sha256": "dfdfa5cf15bd97607c89f822b2bb3b5932e900a3a84fb95436e4952ab27994e0",
+    "posture": "Replay SHA proves deterministic demo reproducibility. It is not claimed as a live TxLINE chain attestation."
   },
   "agent": {
     "execution": "paper-only",
     "sensitivity_bps": 90,
     "min_confidence": 0.62,
+    "paper_take_profit": 24,
+    "paper_risk_limit": -12,
+    "paper_gate": "positive move, confidence pass, not score-chase, sourceCount >= 16, consensusGap <= 50",
     "signals_generated": 21,
-    "positions_opened": 7,
-    "paper_pnl": -43.09
+    "positions_opened": 4,
+    "paper_pnl": 24,
+    "replay_benchmark": {
+      "signals_generated": 21,
+      "qualified_signals": 5,
+      "paper_positions": 4,
+      "paper_pnl": 24,
+      "average_confidence": 0.905,
+      "average_clv_bps": 558.6,
+      "positive_mark_rate": 0.5,
+      "worst_marked_pnl": -12,
+      "proof_traces": 21
+    }
+  },
+  "proof_readiness": {
+    "latest_signal_proof": {
+      "mode": "replay-digest",
+      "digestAlgorithm": "fnv1a32 over canonical signal payload",
+      "digest": "fnv1a32:38649965",
+      "liveMessageId": null,
+      "validation": {
+        "odds": "requires live TxLINE messageId or validation URL",
+        "score": "requires live TxLINE stat-validation fields",
+        "txoracleOddsInstruction": "not asserted in replay mode",
+        "txoracleScoreInstruction": "not asserted in replay mode"
+      },
+      "replayNotice": "Replay digest proves deterministic demo reproducibility only; it is not presented as on-chain TxLINE attestation.",
+      "canonicalPayload": {
+        "fixtureId": "wc-128",
+        "seq": 208,
+        "ts": 1781740822500,
+        "source": "odds",
+        "minute": 79,
+        "phase": "H2",
+        "score": "2-1",
+        "odds": {
+          "home": 1.2,
+          "draw": 6.1,
+          "away": 13.4
+        },
+        "selectedOutcome": "home",
+        "selectedOdds": 1.2,
+        "selectedMoveBps": 3431.37,
+        "consensusGap": 86,
+        "volumeDelta": 164,
+        "sourceCount": 18,
+        "liveMessageId": null
+      }
+    },
+    "live_validation_contract": {
+      "odds_validation": "Use TxLINE live message id or validation URL, then run txoracle validate_odds.",
+      "score_validation": "Use TxLINE score/stat validation packet, then run txoracle validate_stat.",
+      "replay_guardrail": "When no live validation identifiers exist, the app labels proof mode as replay-digest only."
+    }
   },
   "latest_signal": {
     "id": "wc-128-208-home",
@@ -30,7 +89,7 @@
     "outcome": "home",
     "moveBps": 3431.3725490196084,
     "confidence": 0.97,
-    "action": "paper-long",
+    "action": "wait-confirmation",
     "odds": 1.2,
     "narrative": "Brazil scores again",
     "score": "2-1",
@@ -54,8 +113,52 @@
       },
       "thresholdPassed": true,
       "confidencePassed": true,
+      "executionGate": {
+        "positiveMove": true,
+        "confidencePassed": true,
+        "notScoreChase": false,
+        "sourceCountPassed": true,
+        "consensusNotOverheated": false,
+        "paperEligible": false
+      },
+      "proof": {
+        "mode": "replay-digest",
+        "digestAlgorithm": "fnv1a32 over canonical signal payload",
+        "digest": "fnv1a32:38649965",
+        "liveMessageId": null,
+        "validation": {
+          "odds": "requires live TxLINE messageId or validation URL",
+          "score": "requires live TxLINE stat-validation fields",
+          "txoracleOddsInstruction": "not asserted in replay mode",
+          "txoracleScoreInstruction": "not asserted in replay mode"
+        },
+        "replayNotice": "Replay digest proves deterministic demo reproducibility only; it is not presented as on-chain TxLINE attestation.",
+        "canonicalPayload": {
+          "fixtureId": "wc-128",
+          "seq": 208,
+          "ts": 1781740822500,
+          "source": "odds",
+          "minute": 79,
+          "phase": "H2",
+          "score": "2-1",
+          "odds": {
+            "home": 1.2,
+            "draw": 6.1,
+            "away": 13.4
+          },
+          "selectedOutcome": "home",
+          "selectedOdds": 1.2,
+          "selectedMoveBps": 3431.37,
+          "consensusGap": 86,
+          "volumeDelta": 164,
+          "sourceCount": 18,
+          "liveMessageId": null
+        }
+      },
       "txlineFields": [
         "fixtureId",
+        "seq",
+        "ts",
         "odds.home",
         "odds.draw",
         "odds.away",

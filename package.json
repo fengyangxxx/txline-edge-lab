@@ -9,7 +9,8 @@
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
     "packet": "node scripts/export-packet.mjs",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "verify": "node scripts/verify-packet.mjs"
   },
   "devDependencies": {
     "vite": "^7.0.0"

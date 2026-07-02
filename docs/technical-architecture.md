@@ -24,6 +24,8 @@ TxLINE odds/scores stream or deterministic replay
 - `/api/fixtures/snapshot`
 - `/api/odds/stream`
 - `/api/scores/stream`
+- `/api/odds/validation`
+- `/api/scores/stat-validation`
 
 The code includes a live SSE adapter in `src/txline.js`. It expects:
 
@@ -76,17 +78,61 @@ The engine records a full evidence object for the latest signal:
 - source count
 - score breakdown
 - confidence threshold
+- execution gate result
 - exact TxLINE fields used
+- canonical proof digest over the normalized signal payload
+- live validation readiness fields when TxLINE message ids or validation URLs are
+  present
+
+## Proof Readiness
+
+The app does not claim replay data is a live chain proof. Replay packets receive
+a deterministic digest so judges can verify that the UI, exported evidence JSON,
+and submission packet are all describing the same normalized signal payload.
+
+When the live TxLINE adapter receives `MessageId`, SSE id, or explicit validation
+URLs, the same proof panel switches to `live-validation-ready` and records:
+
+- the message id or stream id;
+- an odds validation route suitable for a `validate_odds` check;
+- a score/stat validation route suitable for a `validate_stat` check;
+- the canonical normalized payload used by the agent decision.
+
+This keeps the demo honest while making the live path ready for the validation
+style used by proof-first competitors.
 
 ## Execution Model
 
 The app never places wagers. Qualified positive signals open synthetic paper
 positions with fixed stake sizing. Positions are marked to current odds and can
-enter `open`, `take-profit`, or `risk-cut` states.
+enter `open`, `take-profit`, or `risk-cut` states. The ledger applies explicit
+paper-only rails: +24 units take profit and -12 units risk limit per synthetic
+position, so the replay benchmark reflects capped agent behavior instead of
+uncapped mark-to-market swings.
+
+The execution gate is intentionally stricter than signal generation. A signal is
+visible whenever the model detects movement, but paper execution requires:
+
+- positive implied-probability movement;
+- confidence above the configured minimum;
+- non-score-chase trigger;
+- at least 16 source books/providers;
+- consensus gap at or below 50 synthetic bps, to avoid chasing overheated moves.
+
+Each synthetic position also records a CLV proxy:
+
+```text
+(current implied probability - entry implied probability) * 10,000
+```
+
+Positive CLV means the paper entry beat the later marked price; negative CLV is
+shown directly rather than hidden.
 
 ## Why This Is Production-Oriented
 
 - deterministic decision path;
+- proof-readiness panel with replay digest and live validation routes;
+- CLV proxy and replay benchmark in the evidence packet;
 - no hidden LLM judgment in the critical path;
 - session-only credentials;
 - audit-friendly evidence export;

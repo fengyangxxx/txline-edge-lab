@@ -115,6 +115,14 @@
             </section>
 
             <section class="control-panel">
+              <div class="section-heading">
+                <h2>Proof Readiness</h2>
+                <span id="proofMode">waiting</span>
+              </div>
+              <div id="proofRows" class="evidence-list"></div>
+            </section>
+
+            <section class="control-panel">
               <h2>Risk Settings</h2>
               <label class="range-field">
                 <span>Move sensitivity</span>
@@ -188,6 +196,18 @@
               <div>
                 <span class="metric-label">Compliance posture</span>
                 <strong>paper execution only</strong>
+              </div>
+              <div>
+                <span class="metric-label">Replay benchmark</span>
+                <strong id="benchmarkSignals">0/0 qualified</strong>
+              </div>
+              <div>
+                <span class="metric-label">CLV proxy</span>
+                <strong id="benchmarkClv">+0 bps avg</strong>
+              </div>
+              <div>
+                <span class="metric-label">Proof traces</span>
+                <strong id="benchmarkProof">0 trace digests</strong>
               </div>
             </div>
             <pre id="evidencePreview"></pre>

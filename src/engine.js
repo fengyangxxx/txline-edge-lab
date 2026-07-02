@@ -18,6 +18,20 @@ export function formatPercent(value) {
   return `${Math.round(value * 100)}%`;
 }
 
+export function canonicalJson(value) {
+  return JSON.stringify(canonicalize(value));
+}
+
+export function stableDigest(value) {
+  const text = typeof value === "string" ? value : canonicalJson(value);
+  let hash = 2166136261;
+  for (let index = 0; index < text.length; index += 1) {
+    hash ^= text.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return `fnv1a32:${(hash >>> 0).toString(16).padStart(8, "0")}`;
+}
+
 export function createInitialState(settings = {}) {
   return {
     fixtures: new Map(),
@@ -104,12 +118,16 @@ function detectSignal(fixture, update, previous, settings, history) {
   if (update.consensusGap >= 70) trigger = "Consensus divergence";
   if (update.narrative?.toLowerCase().includes("scores")) trigger = "Score repricing";
 
-  const action =
-    confidence >= settings.minConfidence
-      ? strongest.moveBps > 0
-        ? "paper-long"
-        : "hedge-watch"
-      : "watch";
+  const executionGate = {
+    positiveMove: strongest.moveBps > 0,
+    confidencePassed: confidence >= settings.minConfidence,
+    notScoreChase: trigger !== "Score repricing",
+    sourceCountPassed: update.sourceCount >= 16,
+    consensusNotOverheated: update.consensusGap <= 50
+  };
+  executionGate.paperEligible = Object.values(executionGate).every(Boolean);
+
+  const action = executionGate.paperEligible ? "paper-long" : strongest.moveBps < 0 ? "hedge-watch" : "wait-confirmation";
 
   return {
     id: `${update.fixtureId}-${update.seq}-${strongest.outcome}`,
@@ -145,8 +163,12 @@ function detectSignal(fixture, update, previous, settings, history) {
       },
       thresholdPassed: absMove >= settings.sensitivityBps,
       confidencePassed: confidence >= settings.minConfidence,
+      executionGate,
+      proof: buildProofReadiness(update, strongest),
       txlineFields: [
         "fixtureId",
+        "seq",
+        "ts",
         "odds.home",
         "odds.draw",
         "odds.away",
@@ -156,6 +178,55 @@ function detectSignal(fixture, update, previous, settings, history) {
         "volumeDelta"
       ]
     }
+  };
+}
+
+function buildProofReadiness(update, strongest) {
+  const messageId = update.messageId ?? update.streamId ?? null;
+  const validationTs = update.validationTs ?? update.ts;
+  const canonicalPayload = {
+    fixtureId: update.fixtureId,
+    seq: update.seq,
+    ts: update.ts,
+    source: update.source ?? update.type ?? "replay",
+    minute: update.minute,
+    phase: update.phase,
+    score: update.score,
+    odds: update.odds,
+    selectedOutcome: strongest.outcome,
+    selectedOdds: strongest.odds,
+    selectedMoveBps: Number(strongest.moveBps.toFixed(2)),
+    consensusGap: update.consensusGap,
+    volumeDelta: update.volumeDelta,
+    sourceCount: update.sourceCount,
+    liveMessageId: messageId
+  };
+  const oddsValidation =
+    update.oddsValidationUrl ??
+    (messageId
+      ? `/api/odds/validation?messageId=${encodeURIComponent(messageId)}&ts=${encodeURIComponent(validationTs)}`
+      : null);
+  const scoreValidation =
+    update.scoreValidationUrl ??
+    (messageId
+      ? `/api/scores/stat-validation?fixtureId=${encodeURIComponent(update.fixtureId)}&ts=${encodeURIComponent(validationTs)}`
+      : null);
+
+  return {
+    mode: messageId || update.oddsValidationUrl || update.scoreValidationUrl ? "live-validation-ready" : "replay-digest",
+    digestAlgorithm: "fnv1a32 over canonical signal payload",
+    digest: stableDigest(canonicalPayload),
+    liveMessageId: messageId,
+    validation: {
+      odds: oddsValidation ?? "requires live TxLINE messageId or validation URL",
+      score: scoreValidation ?? "requires live TxLINE stat-validation fields",
+      txoracleOddsInstruction: messageId ? "validate_odds" : "not asserted in replay mode",
+      txoracleScoreInstruction: messageId ? "validate_stat" : "not asserted in replay mode"
+    },
+    replayNotice: messageId
+      ? null
+      : "Replay digest proves deterministic demo reproducibility only; it is not presented as on-chain TxLINE attestation.",
+    canonicalPayload
   };
 }
 
@@ -184,8 +255,13 @@ function openOrUpdatePosition(state, signal, update, fixture) {
     outcome: signal.outcome,
     entryOdds: update.odds[signal.outcome],
     markOdds: update.odds[signal.outcome],
+    entryProbability: impliedProbability(update.odds[signal.outcome]),
+    markProbability: impliedProbability(update.odds[signal.outcome]),
+    clvBps: 0,
     entryTs: update.ts,
     stake: 100,
+    takeProfit: 24,
+    riskLimit: -12,
     pnl: 0,
     state: "open",
     reason: signal.trigger
@@ -198,9 +274,20 @@ function markPositions(state, update) {
     if (position.fixtureId !== update.fixtureId || position.state !== "open") return;
     const markOdds = update.odds[position.outcome];
     position.markOdds = markOdds;
-    position.pnl = position.stake * (position.entryOdds / markOdds - 1);
-    if (Math.abs(position.pnl) > 22) position.state = "take-profit";
-    if (position.pnl < -14) position.state = "risk-cut";
+    position.markProbability = impliedProbability(markOdds);
+    position.clvBps = (position.markProbability - position.entryProbability) * 10_000;
+    const markedPnl = position.stake * (position.entryOdds / markOdds - 1);
+    if (markedPnl >= position.takeProfit) {
+      position.pnl = position.takeProfit;
+      position.state = "take-profit";
+      return;
+    }
+    if (markedPnl <= position.riskLimit) {
+      position.pnl = position.riskLimit;
+      position.state = "risk-cut";
+      return;
+    }
+    position.pnl = markedPnl;
   });
 }
 
@@ -219,6 +306,49 @@ export function latestDecision(state) {
       narrative: "The agent is waiting for a qualified odds move."
     }
   );
+}
+
+export function replayBenchmark(state) {
+  const signals = state.signals;
+  const positions = state.positions;
+  const qualifiedSignals = signals.filter((signal) => signal.action === "paper-long").length;
+  const averageConfidence = average(signals.map((signal) => signal.confidence));
+  const averageClvBps = average(positions.map((position) => position.clvBps ?? 0));
+  const positiveMarkRate =
+    positions.length === 0 ? 0 : positions.filter((position) => position.pnl > 0).length / positions.length;
+  const worstMarkedPnl = positions.length === 0 ? 0 : Math.min(...positions.map((position) => position.pnl));
+
+  return {
+    signals_generated: signals.length,
+    qualified_signals: qualifiedSignals,
+    paper_positions: positions.length,
+    paper_pnl: Number(totalPnl(state).toFixed(2)),
+    average_confidence: Number(averageConfidence.toFixed(3)),
+    average_clv_bps: Number(averageClvBps.toFixed(1)),
+    positive_mark_rate: Number(positiveMarkRate.toFixed(3)),
+    worst_marked_pnl: Number(worstMarkedPnl.toFixed(2)),
+    proof_traces: signals.filter((signal) => signal.evidence?.proof?.digest).length
+  };
+}
+
+function canonicalize(value) {
+  if (Array.isArray(value)) return value.map(canonicalize);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value)
+        .filter(([, item]) => item !== undefined)
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([key, item]) => [key, canonicalize(item)])
+    );
+  }
+  if (Number.isFinite(value)) return Number(value.toFixed(6));
+  return value;
+}
+
+function average(values) {
+  const finite = values.filter(Number.isFinite);
+  if (finite.length === 0) return 0;
+  return finite.reduce((sum, value) => sum + value, 0) / finite.length;
 }
 
 function clamp(value, min, max) {

@@ -72,6 +72,7 @@ export function normalizeTxlineMessage(packet) {
 
   return {
     type: packet.source,
+    source: packet.source,
     seq: Number(data.Seq ?? data.seq ?? Date.now()),
     fixtureId,
     minute: Number(data.Minute ?? data.minute ?? 0),
@@ -86,8 +87,18 @@ export function normalizeTxlineMessage(packet) {
     consensusGap: Number(data.ConsensusGap ?? data.consensusGap ?? 40),
     volumeDelta: Number(data.VolumeDelta ?? data.volumeDelta ?? 40),
     sourceCount: Number(data.SourceCount ?? data.sourceCount ?? 12),
-    narrative: data.EventName ?? data.narrative ?? ""
+    narrative: data.EventName ?? data.narrative ?? "",
+    messageId: optionalString(data.MessageId ?? data.messageId ?? data.message_id ?? packet.message?.id),
+    streamId: optionalString(packet.message?.id),
+    validationTs: Number(data.ValidationTs ?? data.validationTs ?? data.Ts ?? data.ts ?? Date.now()),
+    oddsValidationUrl: optionalString(data.OddsValidationUrl ?? data.oddsValidationUrl ?? data.validation?.odds),
+    scoreValidationUrl: optionalString(data.ScoreValidationUrl ?? data.scoreValidationUrl ?? data.validation?.score)
   };
+}
+
+function optionalString(value) {
+  if (value === undefined || value === null || value === "") return null;
+  return String(value);
 }
 
 export function parseSseBlock(block) {

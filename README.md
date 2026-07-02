@@ -24,13 +24,16 @@ send any betting transaction.
 npm install
 npm run smoke
 npm run packet
+npm run verify
 npm run dev
 npm run build
 ```
 
 `npm run packet` writes `artifacts/submission-packet.json`, which summarizes the
-deterministic replay, generated signals, latest signal evidence, and remaining
-submission asset placeholders.
+deterministic replay, generated signals, latest signal evidence, proof-readiness
+trace, CLV proxy, and submission assets. `npm run verify` checks that the packet
+contains the required TxLINE stream/validation endpoints, replay trace SHA,
+proof traces, and no real-money execution posture.
 
 ## Public links
 
@@ -56,6 +59,29 @@ the product without buying tokens, creating wallets, or waiting for a live match
 The live adapter is in the same code path and can be shown after TxLINE free-tier
 credentials are activated by the human participant.
 
+## Proof and CLV posture
+
+Each generated signal carries a canonical digest over the normalized fixture,
+market, score, selected outcome, and confidence inputs. In replay mode this is
+labeled as a deterministic replay digest only. When a live TxLINE packet provides
+a message id or validation URL, the same panel switches to validation-ready mode
+and shows the expected odds/stat validation route and TxOracle instruction
+(`validate_odds` / `validate_stat`).
+
+The paper portfolio also records a CLV proxy for every synthetic position, using
+the change in implied probability between entry odds and the current mark. That
+lets judges inspect whether the agent's signals are directionally beating later
+prices without requiring any real wager.
+
+Paper execution uses explicit review-safe rails: +24 units take profit and -12
+units risk limit per synthetic position. The app shows the capped state instead
+of presenting uncapped mark-to-market swings as tradable results.
+
+The agent also separates detection from execution. Score-chase moves, overheated
+consensus gaps, weak source breadth, and sub-threshold confidence still appear in
+the signal tape, but the paper ledger waits for confirmation instead of opening a
+position.
+
 ## Submission docs
 
 - `docs/technical-architecture.md`
@@ -65,7 +91,3 @@ credentials are activated by the human participant.
 - `docs/qa-checklist.md`
 - `docs/deployment.md`
 - `docs/submission-copy.md`
-
-## Current submission blockers
-
-- Final Superteam form submission must not happen until the QA gate passes.

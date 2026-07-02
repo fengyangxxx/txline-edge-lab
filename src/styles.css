@@ -390,6 +390,7 @@ th {
 .evidence-row strong {
   font-size: 13px;
   line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 .range-field,
@@ -487,6 +488,7 @@ output {
   display: block;
   margin-top: 4px;
   font-size: 13px;
+  overflow-wrap: anywhere;
 }
 
 pre {

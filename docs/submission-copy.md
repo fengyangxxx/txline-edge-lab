@@ -27,14 +27,19 @@ https://raw.githubusercontent.com/fengyangxxx/txline-edge-lab/068cef0a28ddd742e2
 TxLINE Edge Lab is an autonomous World Cup odds-signal console. It consumes
 TxLINE-shaped odds and score streams, detects sharp repricing, consensus
 divergence, and score-driven market moves, then opens synthetic paper positions
-only when deterministic thresholds are crossed. It is designed for analysis and
-agent explainability, not wagering execution.
+only when deterministic thresholds are crossed. The upgraded build adds
+proof-readiness traces, replay SHA verification, and CLV proxy reporting so the
+agent can be judged against proof-first competitors without pretending replay
+data is a live on-chain attestation. It is designed for analysis and agent
+explainability, not wagering execution.
 
 ## What It Uses From TxLINE
 
 - `/api/fixtures/snapshot` for fixture setup.
 - `/api/odds/stream` for live odds movement.
 - `/api/scores/stream` for score and phase repricing context.
+- `/api/odds/validation` as the live validation path for `validate_odds`.
+- `/api/scores/stat-validation` as the live validation path for `validate_stat`.
 - Guest JWT and API token headers for the live adapter.
 
 ## Key Highlights
@@ -43,6 +48,13 @@ agent explainability, not wagering execution.
   for a live match.
 - Live-ready SSE adapter using TxLINE auth headers in the same app flow.
 - Deterministic confidence model with visible evidence rows for every signal.
+- Proof Readiness panel: replay digest in demo mode, live validation route when
+  TxLINE message ids or validation URLs are present.
+- Replay benchmark with qualified-signal count, proof trace count, and CLV proxy.
+- Capped paper execution rails: +24 take-profit / -12 risk-limit per synthetic
+  position.
+- Anti-chase execution gate: score-chase moves and overheated consensus gaps stay
+  visible as signals but are not auto-opened as paper positions.
 - Paper-only portfolio with no custody, deposits, payments, or betting orders.
 - Exportable JSON packet for judging and technical review.
 
@@ -57,6 +69,7 @@ sessionStorage, cookies, or backend storage.
 
 - `npm run smoke`: PASS.
 - `npm run packet`: PASS.
+- `npm run verify`: PASS.
 - `npm run build`: PASS.
 - Desktop browser smoke: PASS.
 - Mobile browser smoke: PASS.

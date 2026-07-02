@@ -11,6 +11,9 @@ assert.equal(state.fixtures.size, 3);
 assert.ok(state.signals.length >= 6, "expected replay to generate qualified signals");
 assert.ok(state.positions.length >= 1, "expected paper portfolio to open at least one position");
 assert.equal(Number.isFinite(totalPnl(state)), true);
+assert.ok(state.signals[0].evidence.proof.digest.startsWith("fnv1a32:"), "expected signal proof digest");
+assert.equal(state.signals[0].evidence.proof.mode, "replay-digest");
+assert.equal(Number.isFinite(state.positions[0].clvBps), true);
 
 const sse = parseSseBlock('event: odds\nid: 42\ndata: {"FixtureId":123,"home":2.1}\n\n');
 assert.equal(sse.event, "odds");
@@ -23,7 +26,9 @@ console.log(
       fixtures: state.fixtures.size,
       signals: state.signals.length,
       positions: state.positions.length,
-      pnl: Number(totalPnl(state).toFixed(2))
+      pnl: Number(totalPnl(state).toFixed(2)),
+      latest_signal_digest: state.signals[0].evidence.proof.digest,
+      first_position_clv_bps: Number(state.positions[0].clvBps.toFixed(1))
     },
     null,
     2

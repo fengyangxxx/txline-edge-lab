@@ -6,6 +6,7 @@ import {
   ingestUpdate,
   latestDecision,
   outcomeLabels,
+  replayBenchmark,
   totalPnl
 } from "./engine.js";
 import { connectTxlineStreams, createReplayFeed, normalizeTxlineMessage } from "./txline.js";
@@ -42,7 +43,12 @@ const els = {
   apiTokenInput: document.querySelector("#apiTokenInput"),
   connectLiveButton: document.querySelector("#connectLiveButton"),
   liveStatus: document.querySelector("#liveStatus"),
-  signalEvidence: document.querySelector("#signalEvidence")
+  signalEvidence: document.querySelector("#signalEvidence"),
+  proofMode: document.querySelector("#proofMode"),
+  proofRows: document.querySelector("#proofRows"),
+  benchmarkSignals: document.querySelector("#benchmarkSignals"),
+  benchmarkClv: document.querySelector("#benchmarkClv"),
+  benchmarkProof: document.querySelector("#benchmarkProof")
 };
 
 const state = createInitialState();
@@ -183,6 +189,8 @@ function render() {
   renderSignals();
   renderDecision();
   renderSignalEvidence();
+  renderProofReadiness();
+  renderBenchmark();
   renderPortfolio();
   renderEvidence();
 }
@@ -315,6 +323,8 @@ function renderSignalEvidence() {
     ["Volume delta", `${signal.evidence.volumeDelta} feed units`],
     ["Sources", `${signal.evidence.sourceCount} books/providers`],
     ["Confidence", `${formatPercent(signal.confidence)} vs ${formatPercent(signal.evidence.minimumConfidence)}`],
+    ["Execution gate", signal.evidence.executionGate.paperEligible ? "paper eligible" : "wait for confirmation"],
+    ["Trace digest", signal.evidence.proof.digest],
     ["Fields", signal.evidence.txlineFields.join(", ")]
   ];
   els.signalEvidence.innerHTML = rows
@@ -327,6 +337,41 @@ function renderSignalEvidence() {
       `
     )
     .join("");
+}
+
+function renderProofReadiness() {
+  const proof = state.signals[0]?.evidence?.proof;
+  if (!proof) {
+    els.proofMode.textContent = "waiting";
+    els.proofRows.innerHTML = `<p class="helper-text">No signal proof trace yet.</p>`;
+    return;
+  }
+  els.proofMode.textContent = proof.mode;
+  const rows = [
+    ["Digest", proof.digest],
+    ["Odds validation", proof.validation.odds],
+    ["Score validation", proof.validation.score],
+    ["TxOracle odds", proof.validation.txoracleOddsInstruction],
+    ["TxOracle score", proof.validation.txoracleScoreInstruction],
+    ["Posture", proof.replayNotice ?? "Live packet includes validation-ready identifiers."]
+  ];
+  els.proofRows.innerHTML = rows
+    .map(
+      ([label, value]) => `
+        <div class="evidence-row">
+          <span>${label}</span>
+          <strong>${value}</strong>
+        </div>
+      `
+    )
+    .join("");
+}
+
+function renderBenchmark() {
+  const benchmark = replayBenchmark(state);
+  els.benchmarkSignals.textContent = `${benchmark.qualified_signals}/${benchmark.signals_generated} qualified`;
+  els.benchmarkClv.textContent = `${formatBps(benchmark.average_clv_bps)} avg CLV proxy`;
+  els.benchmarkProof.textContent = `${benchmark.proof_traces} trace digests`;
 }
 
 function renderPortfolio() {
@@ -343,7 +388,7 @@ function renderPortfolio() {
                 <td>${position.markOdds.toFixed(2)}</td>
                 <td>${position.stake.toFixed(0)}</td>
                 <td class="${position.pnl >= 0 ? "profit" : "loss"}">${position.pnl >= 0 ? "+" : ""}${position.pnl.toFixed(2)}</td>
-                <td>${position.state}</td>
+                <td>${position.state} / ${formatBps(position.clvBps ?? 0)} CLV</td>
               </tr>
             `
           )
@@ -366,8 +411,14 @@ function buildEvidencePacket() {
     decision_rule: {
       sensitivity_bps: state.settings.sensitivityBps,
       min_confidence: state.settings.minConfidence,
-      execution: "paper-only"
+      execution: "paper-only",
+      paper_take_profit: 24,
+      paper_risk_limit: -12,
+      paper_gate:
+        "positive move, confidence pass, not score-chase, sourceCount >= 16, consensusGap <= 50"
     },
+    replay_benchmark: replayBenchmark(state),
+    proof_readiness: state.signals[0]?.evidence?.proof ?? null,
     latest_signal: state.signals[0] ?? null,
     latest_signal_evidence: state.signals[0]?.evidence ?? null,
     compliance_note: "No wagers, deposits, custody, user funds, or automated betting execution."
