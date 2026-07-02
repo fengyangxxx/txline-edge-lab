@@ -1,0 +1,102 @@
+{
+  "product": "TxLINE Edge Lab",
+  "track": "Trading Tools and Agents",
+  "generated_at": "2026-07-02T15:12:03.740Z",
+  "positioning": {
+    "primary_claim": "Autonomous TxLINE odds/scores agent with deterministic signal evidence, paper-only execution, live validation readiness, CLV proxy, and reproducible replay benchmark.",
+    "review_posture": "Judges can evaluate the product with no wallet funding, no real wager, no token custody, and no live-match dependency."
+  },
+  "rubric_checks": [
+    {
+      "area": "TxLINE data usage",
+      "evidence": [
+        "/api/fixtures/snapshot",
+        "/api/odds/stream",
+        "/api/scores/stream",
+        "/api/odds/validation",
+        "/api/scores/stat-validation"
+      ],
+      "result": true
+    },
+    {
+      "area": "Live validation readiness",
+      "evidence": {
+        "mode": "live-validation-ready",
+        "digest": "fnv1a32:03b3c6d8",
+        "canonical_payload_sha256": "380336978c335bf13a588392888878f8f4fb5f3458281b4c42dfcf224ed0d74f",
+        "odds_validation": "/api/odds/validation?messageId=odds-msg-9002",
+        "score_validation": "/api/scores/stat-validation?fixtureId=txline-live-contract&ts=1781819281000",
+        "txoracle_odds_instruction": "validate_odds",
+        "txoracle_score_instruction": "validate_stat"
+      },
+      "result": true
+    },
+    {
+      "area": "Autonomous agent behavior",
+      "evidence": {
+        "signals_generated": 21,
+        "qualified_signals": 5,
+        "paper_positions": 4,
+        "paper_pnl": 24,
+        "average_confidence": 0.905,
+        "average_clv_bps": 558.6,
+        "positive_mark_rate": 0.5,
+        "worst_marked_pnl": -12,
+        "proof_traces": 21
+      },
+      "result": true
+    },
+    {
+      "area": "Risk and compliance",
+      "evidence": {
+        "real_money_wagers": false,
+        "custody_or_escrow": false,
+        "requires_reviewer_wallet_or_payment": false,
+        "legal_posture": "analytics and paper execution only"
+      },
+      "result": true
+    },
+    {
+      "area": "Reproducible evidence",
+      "evidence": {
+        "replay_sha256": "dfdfa5cf15bd97607c89f822b2bb3b5932e900a3a84fb95436e4952ab27994e0",
+        "proof_traces": 21,
+        "latest_signal_digest": "fnv1a32:38649965"
+      },
+      "result": true
+    },
+    {
+      "area": "Strategy quality signals",
+      "evidence": {
+        "average_clv_bps": 558.6,
+        "worst_marked_pnl": -12,
+        "paper_gate": "positive move, confidence pass, not score-chase, sourceCount >= 16, consensusGap <= 50"
+      },
+      "result": true
+    }
+  ],
+  "competitor_gap_response": [
+    {
+      "visible_gap": "Proof-first competitors show validation artifacts instead of just a dashboard.",
+      "response": "Added live-contract-check.json and packet.live_contract to prove MessageId/validation URL handling in the same engine path."
+    },
+    {
+      "visible_gap": "Top competitors include judge-readable verification commands.",
+      "response": "npm run smoke, npm run packet, npm run verify, and npm run scorecard now generate machine-checkable artifacts."
+    },
+    {
+      "visible_gap": "Trading agents can look reckless if they chase score events.",
+      "response": "Score-chase and overheated consensus events remain visible as signals but are blocked from paper execution."
+    },
+    {
+      "visible_gap": "Raw PnL alone is weak for trading-tool judging.",
+      "response": "Submission packet reports CLV proxy, capped risk, qualified signal count, and proof trace count."
+    }
+  ],
+  "residual_limits": [
+    "No live TxLINE credentials or real match stream are bundled in the public repo.",
+    "The app intentionally does not place wagers, custody funds, or automate betting execution.",
+    "Replay digest is a reproducibility proof, not a claim of live on-chain attestation."
+  ],
+  "final_recommendation": "Submit as a proof-aware analytics and paper-agent product. It is stronger than a visual-only dashboard because the public packet, live contract check, and replay scorecard are independently inspectable."
+}

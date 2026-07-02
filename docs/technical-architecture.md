@@ -101,6 +101,19 @@ URLs, the same proof panel switches to `live-validation-ready` and records:
 This keeps the demo honest while making the live path ready for the validation
 style used by proof-first competitors.
 
+## Live Contract Check
+
+The repository includes `scripts/live-contract-check.mjs`. It injects a synthetic
+TxLINE-style SSE packet with `MessageId`, `OddsValidationUrl`, and
+`ScoreValidationUrl` through `normalizeTxlineMessage` and the same signal engine
+used by the browser UI. The generated `artifacts/live-contract-check.json`
+proves the live path switches to `live-validation-ready`, exposes the expected
+`validate_odds` and `validate_stat` instruction names, and opens a paper position
+only after the execution gate passes.
+
+This check is deliberately synthetic: it proves interface handling and decision
+contract without bundling secrets, live credentials, user data, or any real wager.
+
 ## Execution Model
 
 The app never places wagers. Qualified positive signals open synthetic paper
@@ -132,6 +145,7 @@ shown directly rather than hidden.
 
 - deterministic decision path;
 - proof-readiness panel with replay digest and live validation routes;
+- executable live-contract check for MessageId and validation URL handling;
 - CLV proxy and replay benchmark in the evidence packet;
 - no hidden LLM judgment in the critical path;
 - session-only credentials;

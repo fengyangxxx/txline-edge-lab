@@ -8,7 +8,9 @@
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
+    "live-check": "node scripts/live-contract-check.mjs",
     "packet": "node scripts/export-packet.mjs",
+    "scorecard": "node scripts/judge-scorecard.mjs",
     "smoke": "node scripts/smoke.mjs",
     "verify": "node scripts/verify-packet.mjs"
   },

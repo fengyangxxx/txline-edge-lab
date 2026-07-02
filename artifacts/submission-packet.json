@@ -1,7 +1,7 @@
 {
   "product": "TxLINE Edge Lab",
   "track": "Trading Tools and Agents",
-  "generated_at": "2026-07-02T14:47:23.604Z",
+  "generated_at": "2026-07-02T15:12:02.222Z",
   "demo_mode": "deterministic replay with live-ready TxLINE SSE adapter",
   "txline_endpoints": [
     "/api/fixtures/snapshot",
@@ -77,6 +77,80 @@
       "odds_validation": "Use TxLINE live message id or validation URL, then run txoracle validate_odds.",
       "score_validation": "Use TxLINE score/stat validation packet, then run txoracle validate_stat.",
       "replay_guardrail": "When no live validation identifiers exist, the app labels proof mode as replay-digest only."
+    }
+  },
+  "live_contract": {
+    "check": "TxLINE live validation contract",
+    "verified": true,
+    "generated_at": "2026-07-02T15:12:02.220Z",
+    "input_shape": {
+      "source": "odds",
+      "sse_event": "odds",
+      "sse_id": "sse-odds-9002",
+      "required_fields": [
+        "FixtureId",
+        "Seq",
+        "Minute",
+        "GamePhase",
+        "Participant1Odds",
+        "DrawOdds",
+        "Participant2Odds",
+        "MessageId",
+        "OddsValidationUrl",
+        "ScoreValidationUrl"
+      ]
+    },
+    "normalized_update": {
+      "type": "odds",
+      "source": "odds",
+      "seq": 9002,
+      "fixtureId": "txline-live-contract",
+      "minute": 48,
+      "phase": "H2",
+      "score": "0-0",
+      "ts": 1781819280000,
+      "odds": {
+        "home": 2,
+        "draw": 3.28,
+        "away": 3.42
+      },
+      "consensusGap": 42,
+      "volumeDelta": 124,
+      "sourceCount": 20,
+      "narrative": "Sharp home-side liquidity move",
+      "messageId": "odds-msg-9002",
+      "streamId": "sse-odds-9002",
+      "validationTs": 1781819281000,
+      "oddsValidationUrl": "/api/odds/validation?messageId=odds-msg-9002",
+      "scoreValidationUrl": "/api/scores/stat-validation?fixtureId=txline-live-contract&ts=1781819281000"
+    },
+    "engine_decision": {
+      "trigger": "Sharp movement",
+      "action": "paper-long",
+      "confidence": 0.97,
+      "execution_gate": {
+        "positiveMove": true,
+        "confidencePassed": true,
+        "notScoreChase": true,
+        "sourceCountPassed": true,
+        "consensusNotOverheated": true,
+        "paperEligible": true
+      }
+    },
+    "proof": {
+      "mode": "live-validation-ready",
+      "digest": "fnv1a32:03b3c6d8",
+      "canonical_payload_sha256": "380336978c335bf13a588392888878f8f4fb5f3458281b4c42dfcf224ed0d74f",
+      "odds_validation": "/api/odds/validation?messageId=odds-msg-9002",
+      "score_validation": "/api/scores/stat-validation?fixtureId=txline-live-contract&ts=1781819281000",
+      "txoracle_odds_instruction": "validate_odds",
+      "txoracle_score_instruction": "validate_stat"
+    },
+    "compliance": {
+      "uses_real_credentials": false,
+      "stores_tokens": false,
+      "places_wagers": false,
+      "note": "Synthetic packet validates the browser adapter and engine contract without secrets or real betting execution."
     }
   },
   "latest_signal": {

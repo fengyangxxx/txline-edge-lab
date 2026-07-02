@@ -23,8 +23,10 @@ send any betting transaction.
 ```bash
 npm install
 npm run smoke
+npm run live-check
 npm run packet
 npm run verify
+npm run scorecard
 npm run dev
 npm run build
 ```
@@ -33,7 +35,9 @@ npm run build
 deterministic replay, generated signals, latest signal evidence, proof-readiness
 trace, CLV proxy, and submission assets. `npm run verify` checks that the packet
 contains the required TxLINE stream/validation endpoints, replay trace SHA,
-proof traces, and no real-money execution posture.
+proof traces, live validation-contract evidence, and no real-money execution
+posture. `npm run scorecard` writes `artifacts/judge-scorecard.json`, a
+judge-readable rubric map of what the submission proves.
 
 ## Public links
 
@@ -82,6 +86,19 @@ consensus gaps, weak source breadth, and sub-threshold confidence still appear i
 the signal tape, but the paper ledger waits for confirmation instead of opening a
 position.
 
+## Judge evidence pack
+
+The repository includes machine-checkable artifacts so reviewers do not have to
+trust screenshots:
+
+- `artifacts/submission-packet.json`: replay SHA, signal evidence, paper benchmark,
+  proof traces, CLV proxy, and final submission asset refs.
+- `artifacts/live-contract-check.json`: synthetic TxLINE SSE packet normalized
+  through the same live adapter, proving `MessageId`, odds validation URL, score
+  validation URL, and TxOracle instruction handling without secrets.
+- `artifacts/judge-scorecard.json`: rubric checklist and competitor-gap response.
+- `docs/judge-evidence.md`: human-readable index of the checks and limitations.
+
 ## Submission docs
 
 - `docs/technical-architecture.md`
@@ -91,3 +108,4 @@ position.
 - `docs/qa-checklist.md`
 - `docs/deployment.md`
 - `docs/submission-copy.md`
+- `docs/judge-evidence.md`

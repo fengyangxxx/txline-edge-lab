@@ -20,6 +20,11 @@ final bounty QA.
 - Live adapter exists for `/api/odds/stream` and `/api/scores/stream`.
 - Evidence packet includes `/api/odds/validation` and
   `/api/scores/stat-validation` readiness.
+- Live contract artifact proves a TxLINE-style `MessageId`, odds validation URL,
+  score validation URL, and TxOracle instruction names pass through the live
+  adapter and signal engine.
+- Judge scorecard maps the submission to TxLINE usage, live validation readiness,
+  autonomous behavior, risk posture, reproducible evidence, and strategy quality.
 - Latest signal includes canonical proof digest and clearly labels replay mode
   as deterministic replay, not live chain attestation.
 - Replay benchmark includes qualified signals, proof trace count, paper PnL, and
@@ -40,6 +45,8 @@ final bounty QA.
 - Browser app does not persist JWT/API token.
 - Build passes.
 - Smoke test passes.
+- Live contract check passes.
+- Scorecard generation passes.
 - Desktop/mobile screenshots available.
 
 ## Commands
@@ -47,7 +54,9 @@ final bounty QA.
 ```bash
 npm install
 npm run smoke
+npm run live-check
 npm run packet
 npm run verify
+npm run scorecard
 npm run build
 ```

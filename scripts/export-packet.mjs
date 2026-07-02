@@ -3,6 +3,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { buildReplayUpdates, fixtures } from "../src/sample-data.js";
 import { canonicalJson, createInitialState, ingestFixture, ingestUpdate, replayBenchmark, totalPnl } from "../src/engine.js";
+import { writeLiveContractCheck } from "./live-contract-check.mjs";
 
 const state = createInitialState({ sensitivityBps: 90, minConfidence: 0.62, autoExecute: true });
 fixtures.forEach((fixture) => ingestFixture(state, fixture));
@@ -11,6 +12,7 @@ replayUpdates.forEach((update) => ingestUpdate(state, update));
 
 const replayTraceSha256 = crypto.createHash("sha256").update(canonicalJson(replayUpdates)).digest("hex");
 const latestProof = state.signals[0]?.evidence?.proof ?? null;
+const liveContract = writeLiveContractCheck().check;
 
 const packet = {
   product: "TxLINE Edge Lab",
@@ -51,6 +53,7 @@ const packet = {
       replay_guardrail: "When no live validation identifiers exist, the app labels proof mode as replay-digest only."
     }
   },
+  live_contract: liveContract,
   latest_signal: state.signals[0],
   compliance: {
     real_money_wagers: false,

@@ -27,6 +27,13 @@ assert.match(proof.replayNotice, /not presented as on-chain/i);
 assert.match(packet.proof_readiness.live_validation_contract.odds_validation, /validate_odds/);
 assert.match(packet.proof_readiness.live_validation_contract.score_validation, /validate_stat/);
 
+assert.equal(packet.live_contract.verified, true);
+assert.equal(packet.live_contract.proof.mode, "live-validation-ready");
+assert.match(packet.live_contract.proof.canonical_payload_sha256, /^[a-f0-9]{64}$/);
+assert.match(packet.live_contract.proof.odds_validation, /\/api\/odds\/validation/);
+assert.match(packet.live_contract.proof.score_validation, /\/api\/scores\/stat-validation/);
+assert.equal(packet.live_contract.engine_decision.action, "paper-long");
+
 assert.ok(!readme.includes("Current submission blockers"), "README still contains stale blocker text");
 
 console.log(
@@ -34,6 +41,7 @@ console.log(
     {
       verified: true,
       replay_trace_sha256: packet.replay.trace_sha256,
+      live_contract_digest: packet.live_contract.proof.digest,
       latest_signal_digest: proof.digest,
       qualified_signals: packet.agent.replay_benchmark.qualified_signals,
       proof_traces: packet.agent.replay_benchmark.proof_traces

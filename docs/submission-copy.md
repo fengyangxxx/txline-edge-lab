@@ -30,8 +30,10 @@ divergence, and score-driven market moves, then opens synthetic paper positions
 only when deterministic thresholds are crossed. The upgraded build adds
 proof-readiness traces, replay SHA verification, and CLV proxy reporting so the
 agent can be judged against proof-first competitors without pretending replay
-data is a live on-chain attestation. It is designed for analysis and agent
-explainability, not wagering execution.
+data is a live on-chain attestation. The final build also includes an executable
+live-contract check that feeds a TxLINE-style MessageId plus odds/stat validation
+URLs through the same engine path, generating a public JSON artifact for QA. It
+is designed for analysis and agent explainability, not wagering execution.
 
 ## What It Uses From TxLINE
 
@@ -51,6 +53,10 @@ explainability, not wagering execution.
 - Proof Readiness panel: replay digest in demo mode, live validation route when
   TxLINE message ids or validation URLs are present.
 - Replay benchmark with qualified-signal count, proof trace count, and CLV proxy.
+- Executable `live-contract-check.json` showing validation-ready mode, MessageId
+  handling, `validate_odds`, and `validate_stat` proof routing.
+- Judge scorecard artifact mapping the submission to rubric checks and competitor
+  gaps.
 - Capped paper execution rails: +24 take-profit / -12 risk-limit per synthetic
   position.
 - Anti-chase execution gate: score-chase moves and overheated consensus gaps stay
@@ -68,8 +74,10 @@ sessionStorage, cookies, or backend storage.
 ## Verification Summary
 
 - `npm run smoke`: PASS.
+- `npm run live-check`: PASS.
 - `npm run packet`: PASS.
 - `npm run verify`: PASS.
+- `npm run scorecard`: PASS.
 - `npm run build`: PASS.
 - Desktop browser smoke: PASS.
 - Mobile browser smoke: PASS.
