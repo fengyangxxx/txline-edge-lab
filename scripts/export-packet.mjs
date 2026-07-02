@@ -35,7 +35,8 @@ const packet = {
   submission_assets: {
     repository: "https://github.com/fengyangxxx/txline-edge-lab",
     deployed_url: "https://fengyangxxx.github.io/txline-edge-lab/",
-    demo_video: "TBD",
+    demo_video:
+      "https://raw.githubusercontent.com/fengyangxxx/txline-edge-lab/068cef0a28ddd742e299b39c1268e2a278f5c66d/artifacts/txline-edge-lab-demo.mp4",
     technical_docs: "docs/technical-architecture.md",
     api_feedback: "docs/api-feedback.md",
     demo_script: "docs/demo-script.md"

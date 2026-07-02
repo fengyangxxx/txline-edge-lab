@@ -36,6 +36,7 @@ submission asset placeholders.
 
 - Repository: https://github.com/fengyangxxx/txline-edge-lab
 - Live demo: https://fengyangxxx.github.io/txline-edge-lab/
+- Demo video: https://raw.githubusercontent.com/fengyangxxx/txline-edge-lab/068cef0a28ddd742e299b39c1268e2a278f5c66d/artifacts/txline-edge-lab-demo.mp4
 
 ## Live TxLINE setup
 
@@ -67,5 +68,4 @@ credentials are activated by the human participant.
 
 ## Current submission blockers
 
-- Demo video URL is still `TBD`.
 - Final Superteam form submission must not happen until the QA gate passes.

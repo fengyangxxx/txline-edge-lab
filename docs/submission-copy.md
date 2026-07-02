@@ -1,7 +1,6 @@
 # Superteam Submission Copy
 
-Use this as the base text after the demo video is ready. Replace every `TBD`
-before final QA.
+Use this as the base text for final QA and submission.
 
 ## Project Title
 
@@ -21,7 +20,7 @@ https://fengyangxxx.github.io/txline-edge-lab/
 
 ## Demo Video
 
-TBD
+https://raw.githubusercontent.com/fengyangxxx/txline-edge-lab/068cef0a28ddd742e299b39c1268e2a278f5c66d/artifacts/txline-edge-lab-demo.mp4
 
 ## Short Description
 
@@ -64,5 +63,5 @@ sessionStorage, cookies, or backend storage.
 
 ## Final QA Reminder
 
-Do not submit this form until the final demo video URL and exact form fields have
-been reviewed in a QA gate log ending with `QA_DECISION: PASS`.
+Do not submit this form until the exact form fields have been reviewed in a QA
+gate log ending with `QA_DECISION: PASS`.
