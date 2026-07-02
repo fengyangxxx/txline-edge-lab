@@ -1,0 +1,83 @@
+{
+  "product": "TxLINE Edge Lab",
+  "track": "Trading Tools and Agents",
+  "generated_at": "2026-07-02T12:55:55.672Z",
+  "demo_mode": "deterministic replay with live-ready TxLINE SSE adapter",
+  "txline_endpoints": [
+    "/api/fixtures/snapshot",
+    "/api/odds/stream",
+    "/api/scores/stream"
+  ],
+  "replay": {
+    "fixtures": 3,
+    "updates": 24
+  },
+  "agent": {
+    "execution": "paper-only",
+    "sensitivity_bps": 90,
+    "min_confidence": 0.62,
+    "signals_generated": 21,
+    "positions_opened": 7,
+    "paper_pnl": -43.09
+  },
+  "latest_signal": {
+    "id": "wc-128-208-home",
+    "fixtureId": "wc-128",
+    "fixtureTitle": "Brazil vs Nigeria",
+    "ts": 1781740822500,
+    "minute": 79,
+    "trigger": "Score repricing",
+    "outcome": "home",
+    "moveBps": 3431.3725490196084,
+    "confidence": 0.97,
+    "action": "paper-long",
+    "odds": 1.2,
+    "narrative": "Brazil scores again",
+    "score": "2-1",
+    "phase": "H2",
+    "evidence": {
+      "sensitivityBps": 90,
+      "minimumConfidence": 0.62,
+      "rawMoveBps": 3431.3725490196084,
+      "absoluteMoveBps": 3431.3725490196084,
+      "consensusGap": 86,
+      "volumeDelta": 164,
+      "sourceCount": 18,
+      "scoreBreakdown": {
+        "base": 0.28,
+        "move": 0.36,
+        "consensus": 0.22,
+        "volume": 0.18,
+        "source": 0.06,
+        "trend": 0.03,
+        "event": 0.06
+      },
+      "thresholdPassed": true,
+      "confidencePassed": true,
+      "txlineFields": [
+        "fixtureId",
+        "odds.home",
+        "odds.draw",
+        "odds.away",
+        "score",
+        "phase",
+        "consensusGap",
+        "volumeDelta"
+      ]
+    }
+  },
+  "compliance": {
+    "real_money_wagers": false,
+    "custody_or_escrow": false,
+    "requires_reviewer_wallet_or_payment": false,
+    "legal_posture": "analytics and paper execution only"
+  },
+  "submission_assets": {
+    "repository": "TBD",
+    "deployed_url": "TBD",
+    "demo_video": "TBD",
+    "technical_docs": "docs/technical-architecture.md",
+    "api_feedback": "docs/api-feedback.md",
+    "demo_script": "docs/demo-script.md"
+  }
+}
