@@ -1,0 +1,94 @@
+{
+  "product": "TxLINE Edge Lab",
+  "mode": "replay",
+  "txline_endpoints": [
+    "/api/fixtures/snapshot",
+    "/api/odds/stream",
+    "/api/scores/stream"
+  ],
+  "signals_generated": 11,
+  "open_positions": 3,
+  "paper_pnl": -24.77,
+  "decision_rule": {
+    "sensitivity_bps": 55,
+    "min_confidence": 0.7,
+    "execution": "paper-only"
+  },
+  "latest_signal": {
+    "id": "wc-114-105-draw",
+    "fixtureId": "wc-114",
+    "fixtureTitle": "Japan vs Croatia",
+    "ts": 1781740812000,
+    "minute": 53,
+    "trigger": "Sharp movement",
+    "outcome": "draw",
+    "moveBps": 270.69704489059376,
+    "confidence": 0.9268750000000001,
+    "action": "paper-long",
+    "odds": 2.86,
+    "narrative": "Draw compresses",
+    "score": "0-0",
+    "phase": "H2",
+    "evidence": {
+      "sensitivityBps": 55,
+      "minimumConfidence": 0.7,
+      "rawMoveBps": 270.69704489059376,
+      "absoluteMoveBps": 270.69704489059376,
+      "consensusGap": 31,
+      "volumeDelta": 45,
+      "sourceCount": 14,
+      "scoreBreakdown": {
+        "base": 0.28,
+        "move": 0.36,
+        "consensus": 0.097,
+        "volume": 0.05,
+        "source": 0.02,
+        "trend": 0.06,
+        "event": 0.06
+      },
+      "thresholdPassed": true,
+      "confidencePassed": true,
+      "txlineFields": [
+        "fixtureId",
+        "odds.home",
+        "odds.draw",
+        "odds.away",
+        "score",
+        "phase",
+        "consensusGap",
+        "volumeDelta"
+      ]
+    }
+  },
+  "latest_signal_evidence": {
+    "sensitivityBps": 55,
+    "minimumConfidence": 0.7,
+    "rawMoveBps": 270.69704489059376,
+    "absoluteMoveBps": 270.69704489059376,
+    "consensusGap": 31,
+    "volumeDelta": 45,
+    "sourceCount": 14,
+    "scoreBreakdown": {
+      "base": 0.28,
+      "move": 0.36,
+      "consensus": 0.097,
+      "volume": 0.05,
+      "source": 0.02,
+      "trend": 0.06,
+      "event": 0.06
+    },
+    "thresholdPassed": true,
+    "confidencePassed": true,
+    "txlineFields": [
+      "fixtureId",
+      "odds.home",
+      "odds.draw",
+      "odds.away",
+      "score",
+      "phase",
+      "consensusGap",
+      "volumeDelta"
+    ]
+  },
+  "compliance_note": "No wagers, deposits, custody, user funds, or automated betting execution."
+}
