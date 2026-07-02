@@ -39,7 +39,7 @@ proof traces, and no real-money execution posture.
 
 - Repository: https://github.com/fengyangxxx/txline-edge-lab
 - Live demo: https://fengyangxxx.github.io/txline-edge-lab/
-- Demo video: https://raw.githubusercontent.com/fengyangxxx/txline-edge-lab/068cef0a28ddd742e299b39c1268e2a278f5c66d/artifacts/txline-edge-lab-demo.mp4
+- Demo video: https://raw.githubusercontent.com/fengyangxxx/txline-edge-lab/6f5c0632806080334598343e0c526abb65ae333f/artifacts/txline-edge-lab-demo.mp4
 
 ## Live TxLINE setup
 

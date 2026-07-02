@@ -20,7 +20,7 @@ https://fengyangxxx.github.io/txline-edge-lab/
 
 ## Demo Video
 
-https://raw.githubusercontent.com/fengyangxxx/txline-edge-lab/068cef0a28ddd742e299b39c1268e2a278f5c66d/artifacts/txline-edge-lab-demo.mp4
+https://raw.githubusercontent.com/fengyangxxx/txline-edge-lab/6f5c0632806080334598343e0c526abb65ae333f/artifacts/txline-edge-lab-demo.mp4
 
 ## Short Description
 
