@@ -1,7 +1,7 @@
 {
   "check": "TxLINE live validation contract",
   "verified": true,
-  "generated_at": "2026-07-02T15:12:02.220Z",
+  "generated_at": "2026-07-02T16:11:13.364Z",
   "input_shape": {
     "source": "odds",
     "sse_event": "odds",

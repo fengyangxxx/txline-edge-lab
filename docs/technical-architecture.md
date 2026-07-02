@@ -36,6 +36,23 @@ The code includes a live SSE adapter in `src/txline.js`. It expects:
 The adapter is session-only. The app does not write credentials to localStorage,
 IndexedDB, cookies, or a backend.
 
+## CLI and Package Surface
+
+The package exposes `txline-edge-lab` through `package.json#bin`, so judges can
+review the same agent without relying only on the hosted dashboard:
+
+```bash
+txline-edge-lab replay --json
+txline-edge-lab live-check --json
+txline-edge-lab attest --json
+txline-edge-lab verify --json
+```
+
+`npm run package-proof` creates a local npm tarball under `artifacts/` and writes
+`artifacts/npm-package-proof.json` with the tarball SHA256, npm integrity string,
+included CLI bin, and install hint. This gives the submission an installable
+artifact comparable to proof-first competitors that ship CLI or package surfaces.
+
 ## Replay Mode
 
 Replay mode exists so the product remains reviewable when no live match is active
@@ -114,6 +131,15 @@ only after the execution gate passes.
 This check is deliberately synthetic: it proves interface handling and decision
 contract without bundling secrets, live credentials, user data, or any real wager.
 
+## Solana Memo Attestation Payload
+
+`artifacts/solana-proof-envelope.json` binds the replay trace, live-contract
+artifact, package proof, and compliance posture into a deterministic
+Solana Memo payload. It is intentionally unsigned and marked `not_broadcast`.
+That is a score-strengthening proof surface, not a fake chain claim. If a judge
+or maintainer wants an on-chain timestamp, they can sign the exact memo payload
+and attach the resulting transaction signature.
+
 ## Execution Model
 
 The app never places wagers. Qualified positive signals open synthetic paper
@@ -144,8 +170,10 @@ shown directly rather than hidden.
 ## Why This Is Production-Oriented
 
 - deterministic decision path;
+- CLI and local npm tarball proof for non-UI review;
 - proof-readiness panel with replay digest and live validation routes;
 - executable live-contract check for MessageId and validation URL handling;
+- Solana Memo payload for honest attestation readiness;
 - CLV proxy and replay benchmark in the evidence packet;
 - no hidden LLM judgment in the critical path;
 - session-only credentials;

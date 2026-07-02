@@ -1,7 +1,7 @@
 {
   "product": "TxLINE Edge Lab",
   "track": "Trading Tools and Agents",
-  "generated_at": "2026-07-02T15:12:02.222Z",
+  "generated_at": "2026-07-02T16:11:13.366Z",
   "demo_mode": "deterministic replay with live-ready TxLINE SSE adapter",
   "txline_endpoints": [
     "/api/fixtures/snapshot",
@@ -82,7 +82,7 @@
   "live_contract": {
     "check": "TxLINE live validation contract",
     "verified": true,
-    "generated_at": "2026-07-02T15:12:02.220Z",
+    "generated_at": "2026-07-02T16:11:13.364Z",
     "input_shape": {
       "source": "odds",
       "sse_event": "odds",

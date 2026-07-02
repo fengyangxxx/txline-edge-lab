@@ -1,0 +1,39 @@
+{
+  "attestation_type": "solana_memo_payload",
+  "broadcast_status": "not_broadcast",
+  "broadcast_reason": "No wallet signing or funded transaction is performed in the public repo. This avoids fake on-chain claims while preserving a deterministic memo payload for a reviewer or maintainer to sign.",
+  "network": "solana",
+  "memo_program": "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+  "memo_payload": "txline-edge-lab:77c2d0ab7e5f8b5b38f738d5167198b1ed8b21caf192aeefa4039f830c3a0e1d",
+  "evidence_digest_sha256": "77c2d0ab7e5f8b5b38f738d5167198b1ed8b21caf192aeefa4039f830c3a0e1d",
+  "evidence": {
+    "product": "TxLINE Edge Lab",
+    "track": "Trading Tools and Agents",
+    "repository": "https://github.com/fengyangxxx/txline-edge-lab",
+    "live_demo": "https://fengyangxxx.github.io/txline-edge-lab/",
+    "submission_packet_sha256": "45fe9068c0fd82ab27d3e10a1cc7bb86685e3f6a1d988935100fb769906635e6",
+    "live_contract_check_sha256": "473de3bb5d7959ae0e7aa56bd6c69c2f5fa8f18c94df6201ddd3d0c14080f4fb",
+    "replay_trace_sha256": "dfdfa5cf15bd97607c89f822b2bb3b5932e900a3a84fb95436e4952ab27994e0",
+    "live_contract_digest": "fnv1a32:03b3c6d8",
+    "package": {
+      "tarball": "artifacts/txline-edge-lab-0.1.0.tgz",
+      "shasum": "ad64a4fa57d1ae798cdcebd70def3c85971d830d",
+      "integrity": "sha512-QMQ85IpNCHkj8nUEev8h41a+pRIw+QNDh6Tsig6PISoUnDwvTlNgyZnClZCsqdpC6TpgHtq9XA6eICmYcZwelw==",
+      "unpacked_size": 125590,
+      "file_count": 28
+    },
+    "compliance": {
+      "paper_only": true,
+      "no_wagers": true,
+      "no_custody": true,
+      "no_broadcast_without_reviewer_wallet": true
+    },
+    "generated_at": "2026-07-02T16:11:25.724Z"
+  },
+  "signing_instructions": [
+    "Run npm run live-check && npm run packet && npm run package-proof && npm run scorecard && npm run verify to refresh artifacts.",
+    "Review artifacts/solana-proof-envelope.json.",
+    "Use the memo_payload as the Solana Memo instruction data if a reviewer wants an on-chain timestamp.",
+    "Attach the resulting transaction signature as an additional attestation; do not claim one exists before broadcast."
+  ]
+}

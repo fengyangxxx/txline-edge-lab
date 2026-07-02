@@ -22,9 +22,11 @@ send any betting transaction.
 
 ```bash
 npm install
+npm run cli
 npm run smoke
 npm run live-check
 npm run packet
+npm run package-proof
 npm run verify
 npm run scorecard
 npm run dev
@@ -38,6 +40,20 @@ contains the required TxLINE stream/validation endpoints, replay trace SHA,
 proof traces, live validation-contract evidence, and no real-money execution
 posture. `npm run scorecard` writes `artifacts/judge-scorecard.json`, a
 judge-readable rubric map of what the submission proves.
+
+The package also exposes a real CLI surface:
+
+```bash
+npx txline-edge-lab replay --json
+npx txline-edge-lab live-check --json
+npx txline-edge-lab attest --json
+npx txline-edge-lab verify --json
+```
+
+For local review without publishing to npm, run `npm run package-proof`. It
+creates `artifacts/txline-edge-lab-0.1.0.tgz` plus
+`artifacts/npm-package-proof.json`, including the tarball SHA256, npm integrity
+string, included CLI files, and install hint.
 
 ## Public links
 
@@ -72,6 +88,14 @@ a message id or validation URL, the same panel switches to validation-ready mode
 and shows the expected odds/stat validation route and TxOracle instruction
 (`validate_odds` / `validate_stat`).
 
+The repository also emits `artifacts/solana-proof-envelope.json`. This is a
+deterministic Solana Memo payload over the replay trace, package tarball, and
+live-contract artifacts. It is deliberately marked
+`broadcast_status: "not_broadcast"` because this public package does not sign or
+fund reviewer transactions. A reviewer can sign that memo payload if an on-chain
+timestamp is desired; the project does not fake an existing transaction
+signature.
+
 The paper portfolio also records a CLV proxy for every synthetic position, using
 the change in implied probability between entry odds and the current mark. That
 lets judges inspect whether the agent's signals are directionally beating later
@@ -96,6 +120,10 @@ trust screenshots:
 - `artifacts/live-contract-check.json`: synthetic TxLINE SSE packet normalized
   through the same live adapter, proving `MessageId`, odds validation URL, score
   validation URL, and TxOracle instruction handling without secrets.
+- `artifacts/npm-package-proof.json`: npm tarball integrity, packaged files, CLI
+  bin path, and install command.
+- `artifacts/solana-proof-envelope.json`: unsigned Solana Memo attestation
+  payload that binds the package, replay trace, and proof artifacts.
 - `artifacts/judge-scorecard.json`: rubric checklist and competitor-gap response.
 - `docs/judge-evidence.md`: human-readable index of the checks and limitations.
 

@@ -1,0 +1,27 @@
+{
+  "product": "TxLINE Edge Lab",
+  "generated_at": "2026-07-02T16:11:25.719Z",
+  "package_name": "txline-edge-lab",
+  "version": "0.1.0",
+  "tarball": "artifacts/txline-edge-lab-0.1.0.tgz",
+  "tarball_sha256": "e14721b06b7231ffc928e825d170f7348295379b255b2522ddf504dbe0b88acd",
+  "shasum": "ad64a4fa57d1ae798cdcebd70def3c85971d830d",
+  "integrity": "sha512-QMQ85IpNCHkj8nUEev8h41a+pRIw+QNDh6Tsig6PISoUnDwvTlNgyZnClZCsqdpC6TpgHtq9XA6eICmYcZwelw==",
+  "unpacked_size": 125590,
+  "packed_size": 34052,
+  "file_count": 28,
+  "bin": [
+    "bin/txline-edge-lab.mjs"
+  ],
+  "included_artifacts": [
+    "artifacts/live-contract-check.json",
+    "artifacts/submission-packet.json"
+  ],
+  "install_hint": "npm install ./artifacts/txline-edge-lab-0.1.0.tgz && npx txline-edge-lab replay --json",
+  "cli_checks": [
+    "txline-edge-lab replay --json",
+    "txline-edge-lab live-check --json",
+    "txline-edge-lab attest --json",
+    "txline-edge-lab verify --json"
+  ]
+}

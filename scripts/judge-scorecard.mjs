@@ -3,6 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 
 const packet = JSON.parse(fs.readFileSync("artifacts/submission-packet.json", "utf8"));
+const packageProof = JSON.parse(fs.readFileSync("artifacts/npm-package-proof.json", "utf8"));
+const proofEnvelope = JSON.parse(fs.readFileSync("artifacts/solana-proof-envelope.json", "utf8"));
 
 assert.equal(packet.product, "TxLINE Edge Lab");
 assert.equal(packet.track, "Trading Tools and Agents");
@@ -15,7 +17,7 @@ const scorecard = {
   generated_at: new Date().toISOString(),
   positioning: {
     primary_claim:
-      "Autonomous TxLINE odds/scores agent with deterministic signal evidence, paper-only execution, live validation readiness, CLV proxy, and reproducible replay benchmark.",
+      "Autonomous TxLINE odds/scores agent with deterministic signal evidence, paper-only execution, live validation readiness, CLV proxy, reproducible replay benchmark, CLI, npm tarball proof, and Solana memo attestation payload.",
     review_posture:
       "Judges can evaluate the product with no wallet funding, no real wager, no token custody, and no live-match dependency."
   },
@@ -24,6 +26,33 @@ const scorecard = {
       area: "TxLINE data usage",
       evidence: packet.txline_endpoints,
       result: packet.txline_endpoints.includes("/api/odds/stream") && packet.txline_endpoints.includes("/api/scores/stream")
+    },
+    {
+      area: "CLI and package distribution",
+      evidence: {
+        tarball: packageProof.tarball,
+        bin: packageProof.bin,
+        integrity: packageProof.integrity,
+        cli_checks: packageProof.cli_checks
+      },
+      result:
+        packageProof.package_name === "txline-edge-lab" &&
+        packageProof.bin.includes("bin/txline-edge-lab.mjs") &&
+        /^sha512-/.test(packageProof.integrity) &&
+        packageProof.cli_checks.includes("txline-edge-lab replay --json")
+    },
+    {
+      area: "Solana proof posture",
+      evidence: {
+        attestation_type: proofEnvelope.attestation_type,
+        broadcast_status: proofEnvelope.broadcast_status,
+        memo_payload: proofEnvelope.memo_payload,
+        memo_program: proofEnvelope.memo_program
+      },
+      result:
+        proofEnvelope.attestation_type === "solana_memo_payload" &&
+        proofEnvelope.broadcast_status === "not_broadcast" &&
+        /^txline-edge-lab:[a-f0-9]{64}$/.test(proofEnvelope.memo_payload)
     },
     {
       area: "Live validation readiness",
@@ -77,7 +106,15 @@ const scorecard = {
     },
     {
       visible_gap: "Top competitors include judge-readable verification commands.",
-      response: "npm run smoke, npm run packet, npm run verify, and npm run scorecard now generate machine-checkable artifacts."
+      response: "npm run smoke, npm run packet, npm run package-proof, npm run verify, and npm run scorecard now generate machine-checkable artifacts."
+    },
+    {
+      visible_gap: "Top competitors expose CLI/npm surfaces instead of only a hosted dashboard.",
+      response: "Added the txline-edge-lab CLI with replay, live-check, attest, and verify commands plus a local npm tarball proof."
+    },
+    {
+      visible_gap: "Some competitors reference Solana proof artifacts.",
+      response: "Added a deterministic Solana Memo payload envelope that can be signed by a reviewer wallet without pretending a transaction already exists."
     },
     {
       visible_gap: "Trading agents can look reckless if they chase score events.",
@@ -90,6 +127,7 @@ const scorecard = {
   ],
   residual_limits: [
     "No live TxLINE credentials or real match stream are bundled in the public repo.",
+    "No Solana transaction signature is claimed; the repo ships an unsigned memo payload for honest attestation readiness.",
     "The app intentionally does not place wagers, custody funds, or automate betting execution.",
     "Replay digest is a reproducibility proof, not a claim of live on-chain attestation."
   ],

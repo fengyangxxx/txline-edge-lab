@@ -31,9 +31,10 @@ only when deterministic thresholds are crossed. The upgraded build adds
 proof-readiness traces, replay SHA verification, and CLV proxy reporting so the
 agent can be judged against proof-first competitors without pretending replay
 data is a live on-chain attestation. The final build also includes an executable
-live-contract check that feeds a TxLINE-style MessageId plus odds/stat validation
-URLs through the same engine path, generating a public JSON artifact for QA. It
-is designed for analysis and agent explainability, not wagering execution.
+live-contract check, an installable CLI/npm tarball proof, and an unsigned Solana
+Memo attestation payload that binds the package, replay trace, and validation
+artifacts. It is designed for analysis and agent explainability, not wagering
+execution.
 
 ## What It Uses From TxLINE
 
@@ -55,6 +56,10 @@ is designed for analysis and agent explainability, not wagering execution.
 - Replay benchmark with qualified-signal count, proof trace count, and CLV proxy.
 - Executable `live-contract-check.json` showing validation-ready mode, MessageId
   handling, `validate_odds`, and `validate_stat` proof routing.
+- CLI commands for replay, live-check, attest, and verify.
+- Local npm tarball proof with SHA256 and npm integrity string.
+- Unsigned Solana Memo payload for honest reviewer-side attestation without
+  claiming a fake broadcast transaction.
 - Judge scorecard artifact mapping the submission to rubric checks and competitor
   gaps.
 - Capped paper execution rails: +24 take-profit / -12 risk-limit per synthetic
@@ -76,6 +81,7 @@ sessionStorage, cookies, or backend storage.
 - `npm run smoke`: PASS.
 - `npm run live-check`: PASS.
 - `npm run packet`: PASS.
+- `npm run package-proof`: PASS.
 - `npm run verify`: PASS.
 - `npm run scorecard`: PASS.
 - `npm run build`: PASS.

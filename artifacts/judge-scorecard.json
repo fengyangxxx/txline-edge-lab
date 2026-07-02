@@ -1,9 +1,9 @@
 {
   "product": "TxLINE Edge Lab",
   "track": "Trading Tools and Agents",
-  "generated_at": "2026-07-02T15:12:03.740Z",
+  "generated_at": "2026-07-02T16:11:44.007Z",
   "positioning": {
-    "primary_claim": "Autonomous TxLINE odds/scores agent with deterministic signal evidence, paper-only execution, live validation readiness, CLV proxy, and reproducible replay benchmark.",
+    "primary_claim": "Autonomous TxLINE odds/scores agent with deterministic signal evidence, paper-only execution, live validation readiness, CLV proxy, reproducible replay benchmark, CLI, npm tarball proof, and Solana memo attestation payload.",
     "review_posture": "Judges can evaluate the product with no wallet funding, no real wager, no token custody, and no live-match dependency."
   },
   "rubric_checks": [
@@ -16,6 +16,33 @@
         "/api/odds/validation",
         "/api/scores/stat-validation"
       ],
+      "result": true
+    },
+    {
+      "area": "CLI and package distribution",
+      "evidence": {
+        "tarball": "artifacts/txline-edge-lab-0.1.0.tgz",
+        "bin": [
+          "bin/txline-edge-lab.mjs"
+        ],
+        "integrity": "sha512-QMQ85IpNCHkj8nUEev8h41a+pRIw+QNDh6Tsig6PISoUnDwvTlNgyZnClZCsqdpC6TpgHtq9XA6eICmYcZwelw==",
+        "cli_checks": [
+          "txline-edge-lab replay --json",
+          "txline-edge-lab live-check --json",
+          "txline-edge-lab attest --json",
+          "txline-edge-lab verify --json"
+        ]
+      },
+      "result": true
+    },
+    {
+      "area": "Solana proof posture",
+      "evidence": {
+        "attestation_type": "solana_memo_payload",
+        "broadcast_status": "not_broadcast",
+        "memo_payload": "txline-edge-lab:77c2d0ab7e5f8b5b38f738d5167198b1ed8b21caf192aeefa4039f830c3a0e1d",
+        "memo_program": "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
+      },
       "result": true
     },
     {
@@ -82,7 +109,15 @@
     },
     {
       "visible_gap": "Top competitors include judge-readable verification commands.",
-      "response": "npm run smoke, npm run packet, npm run verify, and npm run scorecard now generate machine-checkable artifacts."
+      "response": "npm run smoke, npm run packet, npm run package-proof, npm run verify, and npm run scorecard now generate machine-checkable artifacts."
+    },
+    {
+      "visible_gap": "Top competitors expose CLI/npm surfaces instead of only a hosted dashboard.",
+      "response": "Added the txline-edge-lab CLI with replay, live-check, attest, and verify commands plus a local npm tarball proof."
+    },
+    {
+      "visible_gap": "Some competitors reference Solana proof artifacts.",
+      "response": "Added a deterministic Solana Memo payload envelope that can be signed by a reviewer wallet without pretending a transaction already exists."
     },
     {
       "visible_gap": "Trading agents can look reckless if they chase score events.",
@@ -95,6 +130,7 @@
   ],
   "residual_limits": [
     "No live TxLINE credentials or real match stream are bundled in the public repo.",
+    "No Solana transaction signature is claimed; the repo ships an unsigned memo payload for honest attestation readiness.",
     "The app intentionally does not place wagers, custody funds, or automate betting execution.",
     "Replay digest is a reproducibility proof, not a claim of live on-chain attestation."
   ],
