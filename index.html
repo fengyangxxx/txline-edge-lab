@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="TxLINE Edge Lab: an autonomous signal console for World Cup odds and score streams."
+    />
+    <title>TxLINE Edge Lab</title>
+    <link rel="icon" href="data:," />
+    <script type="module" crossorigin src="./assets/index-BBgrymUk.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-Bs7_mPTL.css">
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">TxODDS World Cup Hackathon</p>
+          <h1>TxLINE Edge Lab</h1>
+        </div>
+        <div class="topbar-actions" aria-label="Feed controls">
+          <div class="segmented" role="tablist" aria-label="Feed mode">
+            <button class="segmented-button is-active" id="modeReplay" type="button">Replay</button>
+            <button class="segmented-button" id="modeLive" type="button">Live</button>
+          </div>
+          <button class="icon-button" id="pauseButton" type="button" title="Pause or resume replay" aria-label="Pause or resume replay">
+            <span id="pauseIcon" aria-hidden="true">||</span>
+          </button>
+          <button class="icon-button" id="resetButton" type="button" title="Reset session" aria-label="Reset session">
+            <span aria-hidden="true">&#8635;</span>
+          </button>
+        </div>
+      </header>
+
+      <main>
+        <section class="status-grid" aria-label="Session status">
+          <div class="metric">
+            <span class="metric-label">Feed</span>
+            <strong id="feedStatus">Replay stream</strong>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Fixtures</span>
+            <strong id="fixtureCount">0</strong>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Signals</span>
+            <strong id="signalCount">0</strong>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Paper PnL</span>
+            <strong id="paperPnl">+0.00</strong>
+          </div>
+        </section>
+
+        <section class="workspace">
+          <aside class="left-rail" aria-label="Fixture list">
+            <div class="section-heading">
+              <h2>Live Board</h2>
+              <span id="sessionClock">00:00</span>
+            </div>
+            <div id="fixtureList" class="fixture-list"></div>
+          </aside>
+
+          <section class="main-panel" aria-label="Signal analysis">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Selected Fixture</p>
+                <h2 id="selectedFixtureTitle">Waiting for feed</h2>
+              </div>
+              <div class="phase-pill" id="phasePill">NS</div>
+            </div>
+
+            <div class="chart-shell">
+              <svg id="probabilityChart" viewBox="0 0 720 260" role="img" aria-label="Implied probability chart"></svg>
+            </div>
+
+            <div class="market-strip" id="marketStrip"></div>
+
+            <div class="signal-table-shell">
+              <div class="section-heading">
+                <h2>Signal Tape</h2>
+                <span id="lastUpdateLabel">No updates yet</span>
+              </div>
+              <table class="signal-table">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Trigger</th>
+                    <th>Outcome</th>
+                    <th>Move</th>
+                    <th>Confidence</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="signalRows"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <aside class="right-rail" aria-label="Agent controls">
+            <section class="control-panel">
+              <div class="section-heading">
+                <h2>Agent</h2>
+                <span id="agentState">armed</span>
+              </div>
+              <div id="agentDecision" class="decision-box"></div>
+            </section>
+
+            <section class="control-panel">
+              <div class="section-heading">
+                <h2>Signal Evidence</h2>
+                <span>latest</span>
+              </div>
+              <div id="signalEvidence" class="evidence-list"></div>
+            </section>
+
+            <section class="control-panel">
+              <div class="section-heading">
+                <h2>Proof Readiness</h2>
+                <span id="proofMode">waiting</span>
+              </div>
+              <div id="proofRows" class="evidence-list"></div>
+            </section>
+
+            <section class="control-panel">
+              <h2>Risk Settings</h2>
+              <label class="range-field">
+                <span>Move sensitivity</span>
+                <input id="sensitivityInput" type="range" min="40" max="180" value="90" step="5" />
+                <output id="sensitivityValue">90 bps</output>
+              </label>
+              <label class="range-field">
+                <span>Minimum confidence</span>
+                <input id="confidenceInput" type="range" min="45" max="90" value="62" step="1" />
+                <output id="confidenceValue">62%</output>
+              </label>
+              <label class="toggle-field">
+                <input id="autoExecuteInput" type="checkbox" checked />
+                <span>Paper execute qualified signals</span>
+              </label>
+            </section>
+
+            <section class="control-panel">
+              <h2>Live TxLINE Adapter</h2>
+              <p class="helper-text">Session-only credentials. Nothing is saved in browser storage.</p>
+              <label class="text-field">
+                <span>Guest JWT</span>
+                <input id="jwtInput" autocomplete="off" spellcheck="false" placeholder="Bearer token from /auth/guest/start" />
+              </label>
+              <label class="text-field">
+                <span>API token</span>
+                <input id="apiTokenInput" autocomplete="off" spellcheck="false" placeholder="Token from /api/token/activate" />
+              </label>
+              <button class="primary-button" id="connectLiveButton" type="button">Connect SSE</button>
+              <p id="liveStatus" class="helper-text">Replay is active until live credentials are connected.</p>
+            </section>
+          </aside>
+        </section>
+
+        <section class="bottom-grid">
+          <section class="wide-panel">
+            <div class="section-heading">
+              <h2>Paper Portfolio</h2>
+              <span>synthetic, no wager execution</span>
+            </div>
+            <table class="portfolio-table">
+              <thead>
+                <tr>
+                  <th>Fixture</th>
+                  <th>Outcome</th>
+                  <th>Entry</th>
+                  <th>Mark</th>
+                  <th>Stake</th>
+                  <th>PnL</th>
+                  <th>State</th>
+                </tr>
+              </thead>
+              <tbody id="portfolioRows"></tbody>
+            </table>
+          </section>
+
+          <section class="wide-panel evidence-panel">
+            <div class="section-heading">
+              <h2>Submission Evidence</h2>
+              <button class="secondary-button" id="exportButton" type="button">Export JSON</button>
+            </div>
+            <div class="evidence-grid">
+              <div>
+                <span class="metric-label">TxLINE endpoints</span>
+                <strong>/api/odds/stream, /api/scores/stream</strong>
+              </div>
+              <div>
+                <span class="metric-label">Decision model</span>
+                <strong>deterministic threshold engine</strong>
+              </div>
+              <div>
+                <span class="metric-label">Compliance posture</span>
+                <strong>paper execution only</strong>
+              </div>
+              <div>
+                <span class="metric-label">Replay benchmark</span>
+                <strong id="benchmarkSignals">0/0 qualified</strong>
+              </div>
+              <div>
+                <span class="metric-label">CLV proxy</span>
+                <strong id="benchmarkClv">+0 bps avg</strong>
+              </div>
+              <div>
+                <span class="metric-label">Proof traces</span>
+                <strong id="benchmarkProof">0 trace digests</strong>
+              </div>
+            </div>
+            <pre id="evidencePreview"></pre>
+          </section>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
