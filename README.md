@@ -32,6 +32,11 @@ npm run build
 deterministic replay, generated signals, latest signal evidence, and remaining
 submission asset placeholders.
 
+## Public links
+
+- Repository: https://github.com/fengyangxxx/txline-edge-lab
+- Live demo: https://fengyangxxx.github.io/txline-edge-lab/
+
 ## Live TxLINE setup
 
 The World Cup free tier requires:
@@ -62,7 +67,5 @@ credentials are activated by the human participant.
 
 ## Current submission blockers
 
-- Public GitHub repository URL is still `TBD`.
-- Deployed demo URL is still `TBD`.
 - Demo video URL is still `TBD`.
 - Final Superteam form submission must not happen until the QA gate passes.

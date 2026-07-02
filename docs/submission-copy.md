@@ -1,7 +1,7 @@
 # Superteam Submission Copy
 
-Use this as the base text after the public repo, deployed app, and demo video are
-ready. Replace every `TBD` before final QA.
+Use this as the base text after the demo video is ready. Replace every `TBD`
+before final QA.
 
 ## Project Title
 
@@ -13,11 +13,11 @@ Trading Tools and Agents
 
 ## Public GitHub Repo
 
-TBD
+https://github.com/fengyangxxx/txline-edge-lab
 
 ## MVP / Live Demo URL
 
-TBD
+https://fengyangxxx.github.io/txline-edge-lab/
 
 ## Demo Video
 
@@ -64,6 +64,5 @@ sessionStorage, cookies, or backend storage.
 
 ## Final QA Reminder
 
-Do not submit this form until the final public repo URL, deployed URL, demo
-video URL, and exact form fields have been reviewed in a QA gate log ending with
-`QA_DECISION: PASS`.
+Do not submit this form until the final demo video URL and exact form fields have
+been reviewed in a QA gate log ending with `QA_DECISION: PASS`.

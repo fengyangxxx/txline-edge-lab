@@ -5,8 +5,8 @@ final bounty QA.
 
 ## Required Superteam Fields
 
-- Public GitHub repo: TBD
-- MVP link: TBD
+- Public GitHub repo: https://github.com/fengyangxxx/txline-edge-lab
+- MVP link: https://fengyangxxx.github.io/txline-edge-lab/
 - Demo video: TBD
 - Technical documentation: `docs/technical-architecture.md`
 - X profile: optional

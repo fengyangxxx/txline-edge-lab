@@ -234,6 +234,7 @@ main {
   color: #fff;
   font-size: 12px;
   font-weight: 800;
+  white-space: nowrap;
 }
 
 .chart-shell {
@@ -287,11 +288,24 @@ main {
   padding-top: 14px;
 }
 
+.signal-table-shell,
+.wide-panel {
+  overflow-x: auto;
+}
+
 .signal-table,
 .portfolio-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
+}
+
+.signal-table {
+  min-width: 610px;
+}
+
+.portfolio-table {
+  min-width: 680px;
 }
 
 th,

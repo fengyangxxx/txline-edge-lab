@@ -33,8 +33,8 @@ const packet = {
     legal_posture: "analytics and paper execution only"
   },
   submission_assets: {
-    repository: "TBD",
-    deployed_url: "TBD",
+    repository: "https://github.com/fengyangxxx/txline-edge-lab",
+    deployed_url: "https://fengyangxxx.github.io/txline-edge-lab/",
     demo_video: "TBD",
     technical_docs: "docs/technical-architecture.md",
     api_feedback: "docs/api-feedback.md",
